@@ -5,9 +5,16 @@ defmodule Factors do
   """
 
 
-  def run(_args) do
+  def run(args) do
     IO.puts "Starting the 'find the factors of an integer' app!'"
-    {user_int, _remainder} = Integer.parse(IO.gets "Please input your integer:")
+    first = List.first(args)
+    IO.inspect first
+    {user_int, _remainder} = unless first do
+      Integer.parse(IO.gets "Please input your integer:")
+    else
+      Integer.parse(first)
+    end
+
     IO.inspect factors(user_int)
   end
 
