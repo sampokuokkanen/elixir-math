@@ -6,7 +6,7 @@ defmodule Factors do
 
 
   def run(args) do
-    {opts,_,_}= OptionParser.parse(args, [switches: [multiplication: :boolean]])
+    {opts,_,_}= OptionParser.parse(args, [switches: [multiplication: :boolean, kilomiles: :boolean]])
     IO.inspect opts, label: "Command Line Arguments"
     IO.puts "Starting the 'find the factors of an integer' app!'"
     first = List.first(args)
@@ -15,14 +15,22 @@ defmodule Factors do
     else
       Integer.parse(first)
     end
-    if opts[:multiplication] do
-      multiples_of(user_int)
-      |> Enum.with_index
-      |> Enum.each(fn({x, i}) ->
-        IO.puts "#{user_int} x #{i + 1} = #{x}"
-      end)
-    else
-      IO.inspect factors(user_int)
+    cond do
+      opts[:multiplication] ->
+        multiples_of(user_int)
+        |> Enum.with_index
+        |> Enum.each(fn({x, i}) ->
+          IO.puts "#{user_int} x #{i + 1} = #{x}"
+        end)
+      opts[:kilomiles] ->
+          value = IO.gets "Press enter for kilometers to miles, press any key and enter for miles to kilometers"
+          if String.trim(value) == "" do
+            IO.puts kilometers_to_miles(user_int)
+          else
+            IO.puts miles_to_kilometers(user_int)
+          end
+      true ->
+        IO.inspect factors(user_int)
     end
   end
 
@@ -51,5 +59,32 @@ defmodule Factors do
   def multiples_of(i) do
     Enum.map(1..10, fn x -> x * i end)
   end
+
+  @doc """
+  Kilometers to miles.
+
+  ## Examples
+
+      iex> Factors.kilometers_to_miles(2)
+      1.243
+
+  """
+  def kilometers_to_miles(k) do
+    Float.round(k / 1.609, 3)
+  end
+
+  @doc """
+  Miles to kilometers.
+
+  ## Examples
+
+      iex> Factors.miles_to_kilometers(2)
+      3.218
+
+  """
+  def miles_to_kilometers(m) do
+    Float.round(m * 1.609, 3)
+  end
+
 
 end
